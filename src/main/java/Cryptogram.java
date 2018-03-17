@@ -1,52 +1,25 @@
 package main.java;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.Map;
 
-public class Cryptogram {
-
-	private String[] phrase;
-
-	public Cryptogram() {
-		phrase = new String[30];
-		RNG();
+public abstract class Cryptogram<E> {
+	
+	protected String phrase;
+	
+	public Cryptogram(String phrase) {
+		this.phrase = phrase;
 	}
 	
-	public int RNG(){
-		Random random = new Random();
-		int n = random.nextInt(30);
-		readPhrasesFromFile(n);
-		return n;
+	public String getPhrase() {
+		return phrase;
 	}
-
-	private String readPhrasesFromFile(int sentence) {
-		try {
-			int j = 0;
-			Scanner scanner = null;
-			FileReader fr = new FileReader("phrases.txt");
-			BufferedReader br = new BufferedReader(fr);
-			String input = br.readLine();
-			while (input != null) {
-				scanner = new Scanner(input);
-				String phrase = scanner.nextLine();
-				this.phrase[j] = phrase;
-				input = br.readLine();
-				j++;
-			}
-		} catch (FileNotFoundException e) {
-			System.out.println("File Not Found!");// alter if needed
-		} catch (IOException e) {
-			System.out.println("Something went wrong while reading from file!");// alter if needed
-		}
-
-		return phrase[sentence];
+	
+	public void setPhrase(String phrase) {
+		this.phrase = phrase;
 	}
-
-	public String toString() {
-		return phrase[RNG()];
-	}
+	
+	public abstract void addMappingEntry(int key, char value);
+	
+	public abstract Map<E, Integer> getFrequencies();
+	
 }
