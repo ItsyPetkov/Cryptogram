@@ -1,40 +1,63 @@
 package tests.java;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import main.java.Cryptogram;
 import main.java.LetterCryptogram;
 import main.java.NumberCryptogram;
 
-class TestCryptogram {
-	
+public class CryptogramTest {
+
 	private	String phrase = "xyyxzz xx zyyy";
 	private	Cryptogram<Character> letterCrypt;
 	private	Cryptogram<Integer> numberCrypt;
 	private	Map<Character, Integer> frequenciesLetter;
 	private	Map<Integer, Integer> frequenciesNumber;
 	
-	@BeforeEach
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		letterCrypt = new LetterCryptogram(phrase);
 		frequenciesLetter = new HashMap<Character, Integer>();
 		numberCrypt = new NumberCryptogram(phrase);
 		frequenciesNumber = new HashMap<Integer, Integer>();
 	}
 	
-	@AfterEach
-	protected void tearDown() {
+	@After
+	public void tearDown() {
 		letterCrypt = null;
 		numberCrypt = null;
 		frequenciesLetter = null;
 		frequenciesNumber = null;
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void getLetterExceptionTest1() {
+		assertTrue(letterCrypt.getLetter('b') == 'k');
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void getLetterExceptionTest2() {
+		assertTrue(numberCrypt.getLetter(20) == 'r');
+	}
+	
+	@Test
+	public void getLetterCryptogramTest() {
+		letterCrypt.addMappingEntry('b', 'e');
+		letterCrypt.addMappingEntry('g', 'b');
+		numberCrypt.addMappingEntry(15, 'o');
+		numberCrypt.addMappingEntry(6, 'u');
+		
+		assertTrue(letterCrypt.getLetter('b') == 'e');
+		assertTrue(letterCrypt.getLetter('g') == 'b');
+		assertTrue(numberCrypt.getLetter(15) == 'o');
+		assertTrue(numberCrypt.getLetter(6) == 'u');
 	}
 
 	@Test
@@ -64,3 +87,4 @@ class TestCryptogram {
 	}
 
 }
+
