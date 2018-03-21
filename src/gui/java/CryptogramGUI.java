@@ -12,14 +12,18 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import main.java.Game;
 import main.java.Player;
 import main.java.Players;
 
@@ -35,6 +39,7 @@ public class CryptogramGUI {
 	private MouseListener mListener;
 	private Players players;
 	private Player player;
+	private Game game;
 
 	public CryptogramGUI() {
 
@@ -75,6 +80,7 @@ public class CryptogramGUI {
 		content.add(panel2, BorderLayout.CENTER);
 
 		introductionFrame.setSize(500, 300);
+		introductionFrame.setLocationRelativeTo(null);
 		introductionFrame.setVisible(true);
 		introductionFrame.addKeyListener(new KeyListener() {
 
@@ -95,7 +101,7 @@ public class CryptogramGUI {
 			}
 
 		});
-		
+
 		players = new Players();
 	}
 
@@ -140,14 +146,13 @@ public class CryptogramGUI {
 			}
 
 		});
-		
+
 		JButton button1 = new JButton("Load Account");
 		button1.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
+				logIn();
 			}
 
 		});
@@ -158,6 +163,7 @@ public class CryptogramGUI {
 		content.add(panel2, BorderLayout.SOUTH);
 
 		authenticationFrame.setSize(500, 300);
+		authenticationFrame.setLocationRelativeTo(null);
 		authenticationFrame.setVisible(true);
 	}
 
@@ -179,7 +185,7 @@ public class CryptogramGUI {
 		username.setForeground(Color.gray);
 		username.setFont(new java.awt.Font("Arial", Font.ITALIC, 12));
 		username.setEditable(true);
-		username.addMouseListener(mListener = new MouseListener(){
+		username.addMouseListener(mListener = new MouseListener() {
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -189,17 +195,21 @@ public class CryptogramGUI {
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent arg0) {}
+			public void mouseEntered(MouseEvent arg0) {
+			}
 
 			@Override
-			public void mouseExited(MouseEvent arg0) {}
+			public void mouseExited(MouseEvent arg0) {
+			}
 
 			@Override
-			public void mousePressed(MouseEvent arg0) {}
+			public void mousePressed(MouseEvent arg0) {
+			}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {}
-			
+			public void mouseReleased(MouseEvent arg0) {
+			}
+
 		});
 
 		JPanel panel1 = new JPanel(new GridLayout(4, 1));
@@ -214,10 +224,11 @@ public class CryptogramGUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(username.getText().equals("Enter a username!") || username.getText().isEmpty()){
+				if (username.getText().equals("Enter a username!") || username.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please enter a valid username");
-				}else{
-					player = new Player(username.toString());
+				} else {
+					String name = username.getText();
+					player = new Player(name.toString());
 					players.addPlayer(player);
 					JOptionPane.showMessageDialog(null, "Account created Successfuly!");
 					frame.dispose();
@@ -232,7 +243,57 @@ public class CryptogramGUI {
 		content.add(panel2, BorderLayout.SOUTH);
 
 		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+
+	public void logIn() {
+
+		JFrame frame = new JFrame("Log In");
+		Container content = frame.getContentPane();
+
+		JLabel label = new JLabel("User log in!");
+		label.setHorizontalAlignment(JLabel.CENTER);
+		JPanel panel = new JPanel(new GridLayout(1, 1));
+		panel.add(label);
+		content.add(panel, BorderLayout.NORTH);
+
+		JLabel label1 = new JLabel("Please select one of the following...");
+		JComboBox<String> box = new JComboBox<String>();
+		DefaultComboBoxModel<String> boxModel = new DefaultComboBoxModel<String>();
+		for(int i = 0; i < players.allPlayers.size() - 1; i++){
+			boxModel.addElement(players.allPlayers.get(i).getName().toString());
+		}
+		box.setModel(boxModel);
+		JPanel panel1 = new JPanel(new GridLayout(2, 1));
+		panel1.add(label1);
+		panel1.add(box);
+		content.add(panel1, BorderLayout.CENTER);
+
+		JButton button = new JButton("Load Player");
+		button.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (arg0.getActionCommand() == "Load Player") {
+					if(box.getSelectedIndex() == -1){
+						JOptionPane.showMessageDialog(null, "Please select a username with which to log in!");
+					}else{
+						JOptionPane.showMessageDialog(null, "Log in successful!");
+						frame.dispose();
+						authenticationFrame.dispose();
+					}
+				}
+			}
+
+		});
+		
+		JPanel panel2 = new JPanel(new GridLayout(1,1));
+		panel2.add(button);
+		content.add(panel2, BorderLayout.SOUTH);
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 }
-
