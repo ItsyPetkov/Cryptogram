@@ -8,8 +8,10 @@ import java.util.Map;
  */
 public abstract class Cryptogram<E> {
 	
-	// Holds the phrase (non-encrypted).
+	// Holds the phrase.
 	protected String phrase;
+	// Stores the encrypted phrase.
+	protected String encryptedPhrase;
 	
 	/**
 	 * Create a new cryptogram.
@@ -32,6 +34,21 @@ public abstract class Cryptogram<E> {
 	 */
 	public void setPhrase(String phrase) {
 		this.phrase = phrase;
+	}
+	
+	/**
+	 * Return the encrypted phrase.
+	 * @return phrase
+	 */
+	public String getEncryptedPhrase() {
+		return encryptedPhrase;
+	}
+	
+	/**
+	 * Set the encrypted phrase.
+	 */
+	public void setEncryptedPhrase(String phrase) {
+		this.encryptedPhrase = phrase;
 	}
 	
 	/**
