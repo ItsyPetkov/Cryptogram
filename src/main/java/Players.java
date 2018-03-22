@@ -3,7 +3,7 @@ package main.java;
 import java.util.ArrayList;
 
 public class Players {
-	private ArrayList<Player> allPlayers;
+	public ArrayList<Player> allPlayers;
 	
 	public Players() {
 		allPlayers = new ArrayList<Player>();
