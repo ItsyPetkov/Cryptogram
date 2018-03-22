@@ -55,7 +55,7 @@ public class CryptogramGUI {
 		content.add(panel, BorderLayout.NORTH);
 
 		label2 = new JLabel(
-				"Copyright © Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
+				"Copyright  Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
 		label2.setVerticalAlignment(JLabel.BOTTOM);
 		label2.setFont(new java.awt.Font("Arail", Font.PLAIN, 10));
 
@@ -130,7 +130,7 @@ public class CryptogramGUI {
 		content.add(panel1, BorderLayout.CENTER);
 
 		JLabel label4 = new JLabel(
-				"Copyright © Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
+				"Copyright  Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
 		label4.setVerticalAlignment(JLabel.NORTH);
 		label4.setFont(new java.awt.Font("Arail", Font.PLAIN, 10));
 		content.add(label4, BorderLayout.NORTH);
@@ -291,6 +291,209 @@ public class CryptogramGUI {
 		JPanel panel2 = new JPanel(new GridLayout(1,1));
 		panel2.add(button);
 		content.add(panel2, BorderLayout.SOUTH);
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+	
+	public void splitStringIntoChar() {
+		// !!!DO NOT ALTER!!!
+		CryptogramFactory cf = new CryptogramFactory();
+		cf.readPhrasesFromFile(cf.RNG());
+		String temp = cf.toString();
+		char[] characters = temp.toCharArray();
+		System.out.println("Array is:" + Arrays.toString(characters));
+	}
+
+	public void gameFrame() {
+		JFrame frame = new JFrame("Cryptogram Game!");
+		Container content = frame.getContentPane();
+
+		JLabel label = new JLabel("Cryptogram Game cs207(2017/2018)");
+		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setFont(new java.awt.Font("Arial", Font.ITALIC, 24));
+
+		JPanel panel = new JPanel(new GridLayout(1, 1));
+		panel.add(label);
+		content.add(panel, BorderLayout.NORTH);
+
+		JButton button = new JButton("New Game");
+		button.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (arg0.getActionCommand() == "New Game") {
+					// execute another method for new game
+				}
+			}
+
+		});
+		JButton button1 = new JButton("Load Game");
+		button1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand() == "Load Game") {
+					// exectute another frame for load game
+				}
+			}
+
+		});
+		JButton button2 = new JButton("Credits");
+		button2.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand() == "Credits") {
+					credits();
+				}
+			}
+
+		});
+		JButton button3 = new JButton("Exit Game");
+		button3.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand() == "Exit Game") {
+					exitingFrame();
+				}
+			}
+
+		});
+
+		JPanel panel1 = new JPanel(new GridLayout(4, 1));
+		panel1.add(button);
+		panel1.add(button1);
+		panel1.add(button2);
+		panel1.add(button3);
+		content.add(panel1, BorderLayout.CENTER);
+
+		JLabel label1 = new JLabel(
+				"Copyright Â© Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
+		label1.setVerticalAlignment(JLabel.BOTTOM);
+
+		JPanel panel2 = new JPanel(new GridLayout(1, 1));
+		panel2.add(label1);
+		content.add(panel2, BorderLayout.SOUTH);
+
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+
+	private void credits() {
+		JFrame frame = new JFrame("Credits");
+		Container contents = frame.getContentPane();
+
+		JLabel label = new JLabel("Cryptogram Game - Credits");
+		label.setVerticalAlignment(JLabel.TOP);
+		label.setFont(new java.awt.Font("Arial", Font.ITALIC, 18));
+
+		JPanel panel = new JPanel(new GridLayout(1, 1));
+		panel.add(label);
+		contents.add(panel, BorderLayout.NORTH);
+
+		JLabel label1 = new JLabel("Development team consists of 3 people");
+		label1.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label2 = new JLabel(" ");
+		JLabel label3 = new JLabel("Game Developers:");
+		label3.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label4 = new JLabel("Kostadin Georgiev");
+		label4.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label5 = new JLabel("Hristo Petkov");
+		label5.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label6 = new JLabel("Slav Ivanov");
+		label6.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label7 = new JLabel(" ");
+		JLabel label8 = new JLabel("Game Testers");
+		label8.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label9 = new JLabel("Kostadin Georgiev");
+		label9.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label10 = new JLabel("Slav Ivanov");
+		label10.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label11 = new JLabel(" ");
+		JLabel label12 = new JLabel("GUI Develper");
+		label12.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label13 = new JLabel("Hristo Petkov");
+		label13.setHorizontalAlignment(JLabel.CENTER);
+		JLabel label14 = new JLabel(" ");
+
+		JPanel panel1 = new JPanel(new GridLayout(14, 1));
+		panel1.add(label1);
+		panel1.add(label2);
+		panel1.add(label3);
+		panel1.add(label4);
+		panel1.add(label5);
+		panel1.add(label6);
+		panel1.add(label7);
+		panel1.add(label8);
+		panel1.add(label9);
+		panel1.add(label10);
+		panel1.add(label11);
+		panel1.add(label12);
+		panel1.add(label13);
+		panel1.add(label14);
+		contents.add(panel1, BorderLayout.WEST);
+
+		JButton button = new JButton("Back");
+		button.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (arg0.getActionCommand() == "Back") {
+					frame.dispose();
+				}
+			}
+
+		});
+
+		JPanel panel2 = new JPanel(new GridLayout(1, 1));
+		panel2.add(button);
+		contents.add(panel2, BorderLayout.SOUTH);
+
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+
+	private void exitingFrame() {
+		JFrame frame = new JFrame("Exit game");
+		Container content = frame.getContentPane();
+
+		JLabel label = new JLabel("Are you sure you want to exit?");
+		label.setHorizontalAlignment(JLabel.CENTER);
+
+		JPanel panel = new JPanel(new GridLayout(1, 1));
+		panel.add(label);
+		content.add(panel, BorderLayout.CENTER);
+
+		JButton button = new JButton("Yes");
+		button.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (arg0.getActionCommand() == "Yes") {
+					System.exit(0);
+				}
+			}
+		});
+		JButton button1 = new JButton("No");
+		button1.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "No"){
+					frame.dispose();
+				}
+			}
+		});
+		
+		JPanel panel1 = new JPanel(new GridLayout(1,1));
+		panel1.add(button);
+		panel1.add(button1);
+		content.add(panel1, BorderLayout.SOUTH);
 		
 		frame.pack();
 		frame.setLocationRelativeTo(null);
