@@ -141,5 +141,17 @@ public class CryptogramFactory {
 	public String getRandomPhrase() {
 		return phrases.get(rand.nextInt(phrases.size()));
 	}
+	
+	public void splitStringIntoChar() {
+		CryptogramFactory cf = new CryptogramFactory();
+		cf.getRandomPhrase();
+		String temp = cf.toString();
+		char[] characters = temp.toCharArray();
+		System.out.println("Array is:" + Arrays.toString(characters));
+	}
+	
+	public String toString(){
+		return getRandomPhrase();
+	}
 
 }
