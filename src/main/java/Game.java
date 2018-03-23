@@ -59,7 +59,7 @@ public class Game {
 
 	}
 	
-	public void loadGame()
+	public void loadGame() throws Exception
 	{
 		//used to hold all the player's statistics, would then be passed onto constructor to create player object with those values.
 		String[] player_info;
