@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import main.java.CryptogramFactory;
 import main.java.Game;
 import main.java.Player;
 import main.java.Players;
@@ -261,7 +262,7 @@ public class CryptogramGUI {
 		JLabel label1 = new JLabel("Please select one of the following...");
 		JComboBox<String> box = new JComboBox<String>();
 		DefaultComboBoxModel<String> boxModel = new DefaultComboBoxModel<String>();
-		for(int i = 0; i < players.allPlayers.size() - 1; i++){
+		for(int i = 0; i < players.allPlayers.size(); i++){
 			boxModel.addElement(players.allPlayers.get(i).getName().toString());
 		}
 		box.setModel(boxModel);
@@ -300,7 +301,7 @@ public class CryptogramGUI {
 	public void splitStringIntoChar() {
 		// !!!DO NOT ALTER!!!
 		CryptogramFactory cf = new CryptogramFactory();
-		cf.readPhrasesFromFile(cf.RNG());
+	//	cf.readPhrasesFromFile(cf.RNG());
 		String temp = cf.toString();
 		char[] characters = temp.toCharArray();
 		System.out.println("Array is:" + Arrays.toString(characters));

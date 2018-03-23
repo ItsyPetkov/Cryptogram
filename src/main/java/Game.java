@@ -83,6 +83,7 @@ public class Game {
 			System.out.println("Something went wrong while reading from file!");// alter if needed
 		}
 		Player player = new Player(player_info[0]);
+		playerGameMapping.addPlayer(player);
 		
 	}
 
