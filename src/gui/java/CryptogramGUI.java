@@ -3,7 +3,11 @@ package gui.java;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -12,8 +16,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Arrays;
+import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,10 +27,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import main.java.Cryptogram;
 import main.java.CryptogramFactory;
 import main.java.Game;
+import main.java.LetterCryptogram;
 import main.java.Player;
 import main.java.Players;
 
@@ -36,11 +45,16 @@ public class CryptogramGUI {
 	private JLabel label4;
 	private JLabel label5;
 	private JFrame introductionFrame;
+	private JFrame cryptogramGameFrame;
 	private JFrame authenticationFrame;
+	JComboBox<String> box;
+	DefaultComboBoxModel<String> boxModel;
 	private MouseListener mListener;
 	private Players players;
 	private Player player;
 	private Game game;
+	private CryptogramFactory cf;
+	private Cryptogram cryptogram;
 
 	public CryptogramGUI() {
 
@@ -104,6 +118,7 @@ public class CryptogramGUI {
 		});
 
 		players = new Players();
+		
 	}
 
 	private void authentication() {
@@ -260,8 +275,8 @@ public class CryptogramGUI {
 		content.add(panel, BorderLayout.NORTH);
 
 		JLabel label1 = new JLabel("Please select one of the following...");
-		JComboBox<String> box = new JComboBox<String>();
-		DefaultComboBoxModel<String> boxModel = new DefaultComboBoxModel<String>();
+		box = new JComboBox<String>();
+		boxModel = new DefaultComboBoxModel<String>();
 		for(int i = 0; i < players.allPlayers.size(); i++){
 			boxModel.addElement(players.allPlayers.get(i).getName().toString());
 		}
@@ -283,6 +298,7 @@ public class CryptogramGUI {
 						JOptionPane.showMessageDialog(null, "Log in successful!");
 						frame.dispose();
 						authenticationFrame.dispose();
+						gameFrame();
 					}
 				}
 			}
@@ -296,15 +312,6 @@ public class CryptogramGUI {
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-	}
-	
-	public void splitStringIntoChar() {
-		// !!!DO NOT ALTER!!!
-		CryptogramFactory cf = new CryptogramFactory();
-	//	cf.readPhrasesFromFile(cf.RNG());
-		String temp = cf.toString();
-		char[] characters = temp.toCharArray();
-		System.out.println("Array is:" + Arrays.toString(characters));
 	}
 
 	public void gameFrame() {
@@ -325,7 +332,7 @@ public class CryptogramGUI {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (arg0.getActionCommand() == "New Game") {
-					// execute another method for new game
+					cryptogramChoiceFrame();
 				}
 			}
 
@@ -336,7 +343,7 @@ public class CryptogramGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "Load Game") {
-					// exectute another frame for load game
+					loadGameFrame();
 				}
 			}
 
@@ -372,7 +379,7 @@ public class CryptogramGUI {
 		content.add(panel1, BorderLayout.CENTER);
 
 		JLabel label1 = new JLabel(
-				"Copyright © Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
+				"Copyright В© Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
 		label1.setVerticalAlignment(JLabel.BOTTOM);
 
 		JPanel panel2 = new JPanel(new GridLayout(1, 1));
@@ -495,6 +502,308 @@ public class CryptogramGUI {
 		panel1.add(button);
 		panel1.add(button1);
 		content.add(panel1, BorderLayout.SOUTH);
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+	
+	private void cryptogramChoiceFrame(){
+		JFrame frame = new JFrame("Choose Wisely!");
+		Container content = frame.getContentPane();
+		
+		JLabel label = new JLabel("Please select what type of cryptogram you want?");
+		label.setVerticalAlignment(JLabel.BOTTOM);
+		JPanel panel = new JPanel(new GridLayout(1,1));
+		panel.add(label);
+		content.add(panel, BorderLayout.NORTH);
+		
+		JRadioButton letterCryptogramButton = new JRadioButton("Letter Cryptogram");
+		JRadioButton numberCryptogramButton = new JRadioButton("Number Cryptogram");
+		ButtonGroup bGroup = new ButtonGroup();
+		bGroup.add(letterCryptogramButton);
+		bGroup.add(numberCryptogramButton);
+		
+		if(letterCryptogramButton.isSelected()){
+			//Generate LetterCryptogram
+			cf = new CryptogramFactory();
+			cryptogram = cf.makeCryptogram("letter");
+		}
+		else{
+			//Generate NumberCryptogram
+			cf = new CryptogramFactory();
+			cryptogram = cf.makeCryptogram("number");
+		}
+		
+		JPanel panel1 = new JPanel(new GridLayout(1,1));
+		panel1.add(letterCryptogramButton);
+		panel1.add(numberCryptogramButton);
+		content.add(panel1, BorderLayout.CENTER);
+		
+		JButton button3 = new JButton("Okay");
+		button3.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getActionCommand() == "Okay"){
+					JOptionPane.showMessageDialog(null, "Generating Cryptogram");
+					frame.dispose();
+					cryptogramFrame();
+				}
+			}
+			
+		});
+		
+		JPanel panel2 = new JPanel(new GridLayout(1,1));
+		panel2.add(button3);
+		content.add(panel2, BorderLayout.SOUTH);
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+	
+	private void loadGameFrame(){
+		JFrame frame = new JFrame("Load Game");
+		Container content = frame.getContentPane();
+		
+		JLabel label = new JLabel("Please select the game you want to load!");
+		label.setHorizontalAlignment(JLabel.CENTER);
+		
+		JComboBox<String> box = new JComboBox<String>();
+		
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		panel.add(label);
+		panel.add(box);
+		content.add(panel, BorderLayout.CENTER);
+		
+		JButton button = new JButton("Load Cryptogram");
+		button.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getActionCommand() == "Load Cryptogram"){
+					JOptionPane.showMessageDialog(null, "Loading Cryptogram");
+					frame.dispose();
+					//Call the frame in which the game itself is going to be
+				}
+				
+			}
+			
+		});
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+	
+	private void cryptogramFrame(){
+		cryptogramGameFrame = new JFrame("CryptogramCS207");
+		Container content = cryptogramGameFrame.getContentPane();
+		JButton button1 = new JButton("View Frequencies");
+		JButton button2 = new JButton("Get a Hint");
+		JButton button3 = new JButton("Save Game");
+		JButton button4 = new JButton("Help!");
+		button4.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "Help!"){
+					helpingFrame();
+				}
+				
+			}
+			
+		});
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout(-2));
+		panel.add(button1);
+		panel.add(button2);
+		panel.add(button3);
+		panel.add(button4);
+		
+		JButton button5 = new JButton("Undo letter");
+		JButton button6 = new JButton("Check Cryptogram");
+		JButton button7 = new JButton("Reset Cryptogram");
+		JButton button8 = new JButton("Exit Game");
+		button8.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getActionCommand() == "Exit Game"){
+					saveAndExitFrame();
+				}
+				
+			}
+			
+		});
+		
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new FlowLayout(2));
+		panel1.add(button5);
+		panel1.add(button6);
+		panel1.add(button7);
+		panel1.add(button8);
+		
+		//ArrayList<JTextField> fields = new ArrayList<JTextField>();
+		JPanel phrase = new JPanel();
+		JPanel panel2 = new JPanel(new GridBagLayout());
+		GridBagConstraints alignmentY = new GridBagConstraints();
+		alignmentY.gridy = 0;
+		char[] encryptedPhrase = cryptogram.getEncryptedPhrase().toCharArray();
+		for (char ch : encryptedPhrase) {
+			JPanel word = new JPanel();
+			word.setBorder(BorderFactory.createLineBorder(Color.black));
+			if (Character.isLetter(ch) || Character.isDigit(ch)){
+				JPanel letter = new JPanel();
+				JTextField field = new JTextField();
+				field.setPreferredSize(new Dimension(30,30));
+				word.add(field);
+				
+				if (cryptogram instanceof LetterCryptogram) {
+					word.add(new JLabel(String.valueOf((char) ch)));
+				} else {
+					word.add(new JLabel(String.valueOf(ch)));
+				}
+				word.add(letter);
+			}
+			else{
+				JPanel symbol = new JPanel();
+				JLabel label = new JLabel(String.valueOf(ch));
+				symbol.add(label);
+				word.add(symbol);
+			}
+			phrase.add(word);
+		}
+		
+		
+		
+		content.add(panel, BorderLayout.NORTH);
+		content.add(panel1, BorderLayout.SOUTH);
+		content.add(phrase, BorderLayout.CENTER);
+		
+		cryptogramGameFrame.pack();
+		cryptogramGameFrame.setSize(800, 600);
+		cryptogramGameFrame.setLocationRelativeTo(null);
+		cryptogramGameFrame.setVisible(true);
+	}
+	
+	private void saveAndExitFrame(){
+		JFrame frame = new JFrame("Save and Exit game");
+		Container content = frame.getContentPane();
+		
+		JLabel label = new JLabel("Are you sure you wnat to leave?");
+		JLabel label1 = new JLabel("If you leave now woudl you like to save your game progress?");
+		JLabel label2 = new JLabel("If you don't save your game all your progress will be lost!");
+		
+		JPanel panel = new JPanel(new GridLayout(3,1));
+		panel.add(label);
+		panel.add(label1);
+		panel.add(label2);
+		content.add(panel, BorderLayout.CENTER);
+		
+		JButton button = new JButton("Yes, save it");
+		button.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "Yes, save it"){
+					//save game
+					frame.dispose();
+					cryptogramGameFrame.dispose();
+					gameFrame();
+				}
+				
+			}
+			
+		});
+		JButton button1 = new JButton("No, don't save it");
+		button1.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "No, don't save it"){
+					frame.dispose();
+					cryptogramGameFrame.dispose();
+					gameFrame();
+				}
+				
+			}
+			
+		});
+		JButton button2 = new JButton("Cancel");
+		button2.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "Cancel"){
+					frame.dispose();
+				}
+				
+			}
+			
+		});
+		
+		JPanel panel1 = new JPanel(new GridLayout(3,1));
+		panel1.add(button);
+		panel1.add(button1);
+		panel1.add(button2);
+		content.add(panel1, BorderLayout.SOUTH);
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+	
+	private void helpingFrame(){
+		JFrame frame = new JFrame("Helping Frame");
+		Container content = frame.getContentPane();
+		
+		JLabel label = new JLabel("Instructions");
+		label.setFont(new java.awt.Font("Arial", Font.ITALIC, 18));
+		label.setHorizontalAlignment(JLabel.CENTER);
+		
+		JPanel panel = new JPanel(new GridLayout(1,1));
+		panel.add(label);
+		content.add(panel, BorderLayout.NORTH);
+		
+		JLabel label1 = new JLabel("Step by step instruction on how to play the game.");
+		JLabel label2 = new JLabel("1. The aim of the puzzle is to identify the original message.");
+		JLabel label3 = new JLabel("2. Looking for short words such as 1 letter words, which are ‘I’ or ‘A’ as these are the only two 1 letter words in English.");
+		JLabel label4 = new JLabel("3. Players can also use the frequency each enciphered letter appears in the puzzle");
+		JLabel label5 = new JLabel("4. There may also be common groups of letters such as ‘TH’ or ‘ION’ which may be repeated in the message.");
+		JLabel label6 = new JLabel(" ");
+		JLabel label7 = new JLabel("The ultimate goal of the game is to test the way you think and your knowledges of phrases, ");
+		JLabel label8 = new JLabel("but most importantly the game is supposed to make you have a good time and alot of fun.");
+		
+		JPanel panel2 = new JPanel(new GridLayout(8,1));
+		panel2.add(label1);
+		panel2.add(label2);
+		panel2.add(label3);
+		panel2.add(label4);
+		panel2.add(label5);
+		panel2.add(label6);
+		panel2.add(label7);
+		panel2.add(label8);
+		content.add(panel2, BorderLayout.CENTER);
+		
+		JButton button = new JButton("Back");
+		button.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getActionCommand() == "Back"){
+					frame.dispose();
+				}
+				
+			}
+			
+		});
+		
+		JPanel panel3 = new JPanel(new GridLayout(1,1));
+		panel3.add(button);
+		content.add(panel3, BorderLayout.SOUTH);
 		
 		frame.pack();
 		frame.setLocationRelativeTo(null);
