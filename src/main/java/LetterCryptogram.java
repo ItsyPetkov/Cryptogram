@@ -1,5 +1,6 @@
 package main.java;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import java.util.Map;
  * Stores the mapping in a HashMap, where the key of each entry is
  * a encrypted letter and the value is the real letter.
  */
-public class LetterCryptogram extends Cryptogram<Character> {
+public class LetterCryptogram extends Cryptogram {
 	
 	// A map, which maps encrypted letters to real letters.
 	private Map<Character, Character> letter_mapping;
@@ -38,6 +39,7 @@ public class LetterCryptogram extends Cryptogram<Character> {
 	@Override
 	public void addMappingEntry(int key, char value) {
 		letter_mapping.put((char) key, value);
+		System.out.println(key + " " + value);
 	}
 	
 	/**
@@ -45,8 +47,8 @@ public class LetterCryptogram extends Cryptogram<Character> {
 	 * @return frequencies
 	 */
 	@Override
-	public Map<Character, Integer> getFrequencies() {
-		Map<Character, Integer> frequencies = new HashMap<Character, Integer>();
+	public Map<Integer, Integer> getFrequencies() {
+		Map<Integer, Integer> frequencies = new HashMap<Integer, Integer>();
 		int count;
 		char key;
 		char value;
@@ -60,7 +62,7 @@ public class LetterCryptogram extends Cryptogram<Character> {
 					count++;
 				}
 			}
-			frequencies.put(key, count);
+			frequencies.put((int) key, count);
 		}
 		
 		return frequencies;

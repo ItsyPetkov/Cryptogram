@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -50,7 +51,10 @@ public class CryptogramFactory {
 	 */
 	public Cryptogram makeCryptogram(String type) {
 		String randomPhrase = getRandomPhrase().toLowerCase();
-		String encryptedPhrase = randomPhrase;
+		ArrayList<Integer> encryptedPhrase = new ArrayList<Integer>();
+		for (char ch : randomPhrase.toCharArray()) {
+			encryptedPhrase.add((int) ch);
+		}
 		
 		switch (type) {
 			case "letter": {
@@ -71,7 +75,7 @@ public class CryptogramFactory {
 							encryptedLetter = availableAlphabet.get(index);
 						}
 						cryptogram.addMappingEntry(encryptedLetter, head);
-						encryptedPhrase = encryptedPhrase.replace(head, encryptedLetter);
+						Collections.replaceAll(encryptedPhrase, (int) head, (int) encryptedLetter);
 						randomPhrase = randomPhrase.replaceAll(String.valueOf(head), "");
 						availableAlphabet.remove(index);
 					}
@@ -95,7 +99,7 @@ public class CryptogramFactory {
 						int index = rand.nextInt(availableNumbers.size());
 						int encryptedNumber = availableNumbers.get(index);
 						cryptogram.addMappingEntry(encryptedNumber, head);
-						encryptedPhrase = encryptedPhrase.replaceAll(String.valueOf(head), String.valueOf(encryptedNumber));
+						Collections.replaceAll(encryptedPhrase, (int) head, encryptedNumber);
 						randomPhrase = randomPhrase.replaceAll(String.valueOf(head), "");
 						availableNumbers.remove(index);
 					}
@@ -140,18 +144,6 @@ public class CryptogramFactory {
 	 */
 	public String getRandomPhrase() {
 		return phrases.get(rand.nextInt(phrases.size()));
-	}
-	
-	public void splitStringIntoChar() {
-		CryptogramFactory cf = new CryptogramFactory();
-		cf.getRandomPhrase();
-		String temp = cf.toString();
-		char[] characters = temp.toCharArray();
-		System.out.println("Array is:" + Arrays.toString(characters));
-	}
-	
-	public String toString(){
-		return getRandomPhrase();
 	}
 
 }

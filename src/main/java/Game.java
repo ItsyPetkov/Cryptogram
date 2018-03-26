@@ -27,7 +27,7 @@ public class Game {
 
 	public void saveGame(Player player, Cryptogram cr) throws IOException
 	{
-		Player saved_player = null;
+		Player saved_player = null;	
 		Cryptogram cryptog = null;
 		if(player != null && cr != null) {
 		saved_player = player;
@@ -59,7 +59,7 @@ public class Game {
 
 	}
 	
-	public void loadGame() throws Exception
+	public void loadGame()
 	{
 		//used to hold all the player's statistics, would then be passed onto constructor to create player object with those values.
 		String[] player_info;
@@ -83,7 +83,6 @@ public class Game {
 			System.out.println("Something went wrong while reading from file!");// alter if needed
 		}
 		Player player = new Player(player_info[0]);
-		playerGameMapping.addPlayer(player);
 		
 	}
 

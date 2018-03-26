@@ -8,7 +8,7 @@ import java.util.Map;
  * Stores the mapping in a HashMap, where the key of each entry is
  * a encrypted number and the value is the real letter.
  */
-public class NumberCryptogram extends Cryptogram<Integer> {
+public class NumberCryptogram extends Cryptogram {
 	
 	// A map, which maps encrypted numbers to real letters.
 	private Map<Integer, Character> number_mapping;

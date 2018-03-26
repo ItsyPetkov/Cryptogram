@@ -4,10 +4,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
+import main.java.LetterCryptogram;
+import main.java.NumberCryptogram;
 import main.java.Player;
 import main.java.Players;
 

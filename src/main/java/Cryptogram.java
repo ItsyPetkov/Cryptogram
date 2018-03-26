@@ -1,17 +1,18 @@
 package main.java;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * A class representing a cryptogram, which uses either
  * letter-to-letter encryption, or number-to-letter encryption.
  */
-public abstract class Cryptogram<E> {
+public abstract class Cryptogram {
 	
 	// Holds the phrase.
 	protected String phrase;
 	// Stores the encrypted phrase.
-	protected String encryptedPhrase;
+	protected ArrayList<Integer> encryptedPhrase;
 	
 	/**
 	 * Create a new cryptogram.
@@ -40,15 +41,15 @@ public abstract class Cryptogram<E> {
 	 * Return the encrypted phrase.
 	 * @return phrase
 	 */
-	public String getEncryptedPhrase() {
+	public ArrayList<Integer> getEncryptedPhrase() {
 		return encryptedPhrase;
 	}
 	
 	/**
 	 * Set the encrypted phrase.
 	 */
-	public void setEncryptedPhrase(String phrase) {
-		this.encryptedPhrase = phrase;
+	public void setEncryptedPhrase(ArrayList<Integer> encryptedPhrase) {
+		this.encryptedPhrase = new ArrayList<Integer>(encryptedPhrase);
 	}
 	
 	/**
@@ -67,6 +68,6 @@ public abstract class Cryptogram<E> {
 	 * Find the frequencies of each of the encrypted symbols from the phrase.
 	 * @return frequencies
 	 */
-	public abstract Map<E, Integer> getFrequencies();
+	public abstract Map<Integer, Integer> getFrequencies();
 	
 }

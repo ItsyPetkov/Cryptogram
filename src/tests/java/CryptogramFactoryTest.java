@@ -2,7 +2,11 @@ package tests.java;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,7 +36,10 @@ public class CryptogramFactoryTest {
 		cryptogram = cryptGen.makeCryptogram("letter");
 		String phrase = cryptogram.getPhrase();
 		System.out.println(phrase);
-		System.out.println(cryptogram.getEncryptedPhrase());
+		ArrayList<Integer> encryptedPhrase = cryptogram.getEncryptedPhrase();
+		for (int letter : encryptedPhrase)
+			System.out.print((char) letter);
+		System.out.println();
 	}
 	
 	@Test
@@ -40,7 +47,15 @@ public class CryptogramFactoryTest {
 		cryptogram = cryptGen.makeCryptogram("number");
 		String phrase = cryptogram.getPhrase();
 		System.out.println(phrase);
-		System.out.println(cryptogram.getEncryptedPhrase());
+		ArrayList<Integer> encryptedPhrase = cryptogram.getEncryptedPhrase();
+		for (int i = 0; i < encryptedPhrase.size(); i++) {
+			if (Character.isLetter(phrase.charAt(i))) {
+				System.out.println(encryptedPhrase.get(i));
+			} else {
+				System.out.println(phrase.charAt(i));
+			}
+		}
+		System.out.println();
 	}
 	
 	@Test

@@ -16,15 +16,15 @@ import main.java.NumberCryptogram;
 public class CryptogramTest {
 
 	private	String phrase = "xyyxzz xx zyyy";
-	private	Cryptogram<Character> letterCrypt;
-	private	Cryptogram<Integer> numberCrypt;
-	private	Map<Character, Integer> frequenciesLetter;
+	private	Cryptogram letterCrypt;
+	private	Cryptogram numberCrypt;
+	private	Map<Integer, Integer> frequenciesLetter;
 	private	Map<Integer, Integer> frequenciesNumber;
 	
 	@Before
 	public void setUp() {
 		letterCrypt = new LetterCryptogram(phrase);
-		frequenciesLetter = new HashMap<Character, Integer>();
+		frequenciesLetter = new HashMap<Integer, Integer>();
 		numberCrypt = new NumberCryptogram(phrase);
 		frequenciesNumber = new HashMap<Integer, Integer>();
 	}
@@ -54,10 +54,10 @@ public class CryptogramTest {
 		numberCrypt.addMappingEntry(15, 'o');
 		numberCrypt.addMappingEntry(6, 'u');
 		
-		assertTrue(letterCrypt.getLetter('b') == 'e');
-		assertTrue(letterCrypt.getLetter('g') == 'b');
-		assertTrue(numberCrypt.getLetter(15) == 'o');
-		assertTrue(numberCrypt.getLetter(6) == 'u');
+		assertTrue((char) letterCrypt.getLetter('b') == 'e');
+		assertTrue((char) letterCrypt.getLetter('g') == 'b');
+		assertTrue((char) numberCrypt.getLetter(15) == 'o');
+		assertTrue((char) numberCrypt.getLetter(6) == 'u');
 	}
 
 	@Test
@@ -68,9 +68,9 @@ public class CryptogramTest {
 		
 		frequenciesLetter = letterCrypt.getFrequencies();
 		
-		assertTrue(frequenciesLetter.get('m') == 4);
-		assertTrue(frequenciesLetter.get('d') == 5);
-		assertTrue(frequenciesLetter.get('y') == 3);
+		assertTrue(frequenciesLetter.get((int) 'm') == 4);
+		assertTrue(frequenciesLetter.get((int) 'd') == 5);
+		assertTrue(frequenciesLetter.get((int) 'y') == 3);
 	}
 	
 	@Test
