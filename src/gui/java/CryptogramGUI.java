@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.Arrays;
 
 import javax.swing.DefaultComboBoxModel;
@@ -229,7 +230,13 @@ public class CryptogramGUI {
 					JOptionPane.showMessageDialog(null, "Please enter a valid username");
 				} else {
 					String name = username.getText();
-					player = new Player(name.toString());
+					try {
+					player = new Player(name);
+					}
+					catch(IOException e1)
+					{
+						e1.getMessage();
+					}
 					players.addPlayer(player);
 					JOptionPane.showMessageDialog(null, "Account created Successfuly!");
 					frame.dispose();

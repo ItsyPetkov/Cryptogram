@@ -19,7 +19,7 @@ public class FileTests {
 	public LetterCryptogram crg;
 		
 	@Test
-	public void saveGameCreatesFileSuccessfully()
+	public void saveGameCreatesFileSuccessfully() throws IOException
 	{
 		FileReader fr = null;
 		james = new Player("James");
@@ -33,7 +33,7 @@ public class FileTests {
 		}
 		
 		try {
-		fr = new FileReader("saved_game.txt");
+		fr = new FileReader(james.getName()+"_saved_game_"+james.getSavedGames()+1+".txt");
 		} catch (FileNotFoundException e)
 		{
 			e.printStackTrace();

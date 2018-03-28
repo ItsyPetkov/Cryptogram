@@ -3,6 +3,7 @@ package tests.java;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -26,7 +27,13 @@ public class PlayerTest {
 
 	@Test
 	public void getNameReturnsCorrectMessage() {
+		try {
 		 john = new Player("John");
+		}
+		catch(IOException e)
+		{
+			e.getMessage();
+		}
 		 
 		assertTrue(john.getName().equals("John"));
 	}
@@ -34,7 +41,13 @@ public class PlayerTest {
 	@Test
 	public void findPlayerReturnsCorrectMessage() {
 		 array_list = new Players();
-		 john = new Player("John");
+		 try {
+			 john = new Player("John");
+			}
+			catch(IOException e)
+			{
+				e.getMessage();
+			}
 		 
 		array_list.addPlayer(john);
 		assertTrue(array_list.findPlayer("John").getName().equals(john.getName()));
@@ -43,7 +56,13 @@ public class PlayerTest {
 	@Test
 	public void removePlayerRemovesCorrectPlayer() {
 		 array_list = new Players();
-		 john = new Player("John");
+		 try {
+			 john = new Player("John");
+			}
+			catch(IOException e)
+			{
+				e.getMessage();
+			}
 		 
 		array_list.addPlayer(john);
 		array_list.removePlayer("John");
@@ -53,8 +72,14 @@ public class PlayerTest {
 	@Test
 	public void getAllPlayerAccuraciesReturnsCorrectValue() {
 		 array_list = new Players();
-		 john = new Player("John");
-		 james = new Player("James");
+		 try {
+			 john = new Player("John");
+			 james = new Player("James");
+			}
+			catch(IOException e)
+			{
+				e.getMessage();
+			}
 
 		array_list.addPlayer(john);
 		array_list.addPlayer(james);
@@ -67,8 +92,14 @@ public class PlayerTest {
 	@Test
 	public void getAllPlayerTimesReturnsCorrectValue() {
 		 array_list = new Players();
-		 john = new Player("John");
-		 james = new Player("James");
+		 try {
+			 john = new Player("John");
+			 james = new Player("James");
+			}
+			catch(IOException e)
+			{
+				e.getMessage();
+			}
 
 		array_list.addPlayer(john);
 		array_list.addPlayer(james);
@@ -81,9 +112,14 @@ public class PlayerTest {
 	@Test
 	public void getAllCryptogramsPlayedReturnsCorrectValue() {
 		 array_list = new Players();
-		 john = new Player("John");
-		 james = new Player("James");
-
+		 try {
+			 john = new Player("John");
+			 james = new Player("James");
+			}
+			catch(IOException e)
+			{
+				e.getMessage();
+			}
 		array_list.addPlayer(john);
 		array_list.addPlayer(james);
 
@@ -95,8 +131,14 @@ public class PlayerTest {
 	@Test
 	public void getAllCompletedCryptogramsReturnsCorrectValue() {
 		 array_list = new Players();
-		 john = new Player("John");
-		 james = new Player("James");
+		 try {
+			 john = new Player("John");
+			 james = new Player("James");
+			}
+			catch(IOException e)
+			{
+				e.getMessage();
+			}
 
 		array_list.addPlayer(john);
 		array_list.addPlayer(james);
