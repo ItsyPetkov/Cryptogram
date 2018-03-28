@@ -22,6 +22,17 @@ public class Player {
 		savePlayerFile();
 	}
 	
+	//Constructor meant for loading the player back into the game on the 2nd launch of the application.
+	public Player(String name, int accuracy, int averageTime, int cryptogramsPlayed, int cryptogramsCompleted) {
+		this.name = name;
+		this.accuracy = accuracy;
+		this.averageTime = averageTime;
+		this.cryptogramsPlayed = cryptogramsPlayed;
+		this.cryptogramsCompleted = cryptogramsCompleted;
+	//	this.savedGames = 0;
+	//	this.savePlayerFile();
+	}
+	
 	public void updateAccuracy(int accuracy) {
 		
 	}
