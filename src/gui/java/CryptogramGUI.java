@@ -6,8 +6,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -16,9 +14,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -45,6 +44,7 @@ public class CryptogramGUI {
 	private JLabel label4;
 	private JLabel label5;
 	private JFrame introductionFrame;
+	private JFrame cryptogramGameFrame;
 	private JFrame authenticationFrame;
 	private MouseListener mListener;
 	private Players players;
@@ -115,6 +115,7 @@ public class CryptogramGUI {
 		});
 
 		players = new Players();
+		game = new Game();
 		
 	}
 
@@ -149,6 +150,7 @@ public class CryptogramGUI {
 		content.add(label4, BorderLayout.NORTH);
 
 		JButton button = new JButton("Create Account");
+		button.setToolTipText("Create a new account, with all values set to 0.");
 		button.addActionListener(new ActionListener() {
 
 			@Override
@@ -161,11 +163,12 @@ public class CryptogramGUI {
 		});
 
 		JButton button1 = new JButton("Load Account");
+		button1.setToolTipText("Input the name of an existing account to load into it.");
 		button1.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				logIn();
+				filePlayerLoad();
 			}
 
 		});
@@ -178,6 +181,79 @@ public class CryptogramGUI {
 		authenticationFrame.setSize(500, 300);
 		authenticationFrame.setLocationRelativeTo(null);
 		authenticationFrame.setVisible(true);
+	}
+	
+	
+	private void filePlayerLoad(){
+		JFrame frame = new JFrame();
+		Container content = frame.getContentPane();
+		
+		JLabel label = new JLabel("Please enter a name");
+		TextField field = new TextField("Enter a name!");
+		field.setForeground(Color.gray);
+		field.setFont(new java.awt.Font("Arial", Font.ITALIC, 12));
+		field.setEditable(true);
+		field.addMouseListener(mListener = new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				field.setText(" ");
+				field.setFont(new JTextField().getFont());
+				field.setForeground(Color.black);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
+			
+		});
+		
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		panel.add(label);
+		panel.add(field);
+		content.add(panel, BorderLayout.CENTER);
+		
+		JButton button = new JButton("Find & Load");
+		button.setToolTipText("Finds file in directory and loads data saved.");
+		button.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getActionCommand() == "Find & Load"){
+					try{
+						if(field.getText().isEmpty() || field.getText().equals("Enter a name!")){
+							JOptionPane.showMessageDialog(null, "Please enter an account to load!");
+						}else{
+							frame.dispose();
+							player = game.addSavedPlayerToArrayList(field.getText().toString());
+							players.addPlayer(player);	
+							logIn();
+						}
+					}catch(NullPointerException e){
+						JOptionPane.showMessageDialog(null, "No such name!");
+					}
+					
+				}
+				
+			}
+			
+		});
+		
+		JPanel panel1 = new JPanel(new GridLayout(1,1));
+		panel1.add(button);
+		content.add(panel1, BorderLayout.SOUTH);
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
 	}
 
 	private void accountCreation() {
@@ -237,9 +313,13 @@ public class CryptogramGUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (username.getText().equals("Enter a username!") || username.getText().isEmpty()) {
+				if (username.getText().equals("Enter a username!")) {
 					JOptionPane.showMessageDialog(null, "Please enter a valid username");
-				} else {
+				} 
+				else if(username.getText().isEmpty()){
+					JOptionPane.showMessageDialog(null, "Please enter a valid username");
+				}
+				else {
 					String name = username.getText();
 					player = new Player(name.toString());
 					players.addPlayer(player);
@@ -273,6 +353,7 @@ public class CryptogramGUI {
 
 		JLabel label1 = new JLabel("Please select one of the following...");
 		JComboBox<String> box = new JComboBox<String>();
+		box.setToolTipText("Select which game you would like to load.");
 		DefaultComboBoxModel<String> boxModel = new DefaultComboBoxModel<String>();
 		for(int i = 0; i < players.allPlayers.size(); i++){
 			boxModel.addElement(players.allPlayers.get(i).getName().toString());
@@ -324,6 +405,7 @@ public class CryptogramGUI {
 		content.add(panel, BorderLayout.NORTH);
 
 		JButton button = new JButton("New Game");
+		button.setToolTipText("Creates a new frame which is the main frame fin which the game is played.");
 		button.addActionListener(new ActionListener() {
 
 			@Override
@@ -335,6 +417,7 @@ public class CryptogramGUI {
 
 		});
 		JButton button1 = new JButton("Load Game");
+		button1.setToolTipText("Load one of the saved games your current account has.");
 		button1.addActionListener(new ActionListener() {
 
 			@Override
@@ -346,6 +429,7 @@ public class CryptogramGUI {
 
 		});
 		JButton button2 = new JButton("Credits");
+		button2.setToolTipText("Press here to view the best programmers in the world.");
 		button2.addActionListener(new ActionListener() {
 
 			@Override
@@ -357,6 +441,7 @@ public class CryptogramGUI {
 
 		});
 		JButton button3 = new JButton("Exit Game");
+		button3.setToolTipText("This exits the game. Bye bye!");
 		button3.addActionListener(new ActionListener() {
 
 			@Override
@@ -376,7 +461,7 @@ public class CryptogramGUI {
 		content.add(panel1, BorderLayout.CENTER);
 
 		JLabel label1 = new JLabel(
-				"Copyright © Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
+				"Copyright В© Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
 		label1.setVerticalAlignment(JLabel.BOTTOM);
 
 		JPanel panel2 = new JPanel(new GridLayout(1, 1));
@@ -443,7 +528,8 @@ public class CryptogramGUI {
 		contents.add(panel1, BorderLayout.WEST);
 
 		JButton button = new JButton("Back");
-		button.addActionListener(new ActionListener() {
+		button.setToolTipText("This button leads back to the main menu.");
+		button.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -516,7 +602,9 @@ public class CryptogramGUI {
 		content.add(panel, BorderLayout.NORTH);
 		
 		JRadioButton letterCryptogramButton = new JRadioButton("Letter Cryptogram");
+		letterCryptogramButton.setToolTipText("Clicking this button means you choose to create a letter cryptogram");
 		JRadioButton numberCryptogramButton = new JRadioButton("Number Cryptogram");
+		numberCryptogramButton.setToolTipText("Clicking this button means you choose to create a number cryptogram.");
 		
 		ButtonGroup bGroup = new ButtonGroup();
 		bGroup.add(letterCryptogramButton);
@@ -530,6 +618,7 @@ public class CryptogramGUI {
 		content.add(panel1, BorderLayout.CENTER);
 		
 		JButton cryptChoiceButton = new JButton("Generate cryptogram");
+		cryptChoiceButton.setToolTipText("Creates a cryptogram based on the choice you make regarding its type.");
 		cryptChoiceButton.addActionListener(new ActionListener(){
 
 			@Override
@@ -567,27 +656,47 @@ public class CryptogramGUI {
 		JLabel label = new JLabel("Please select the game you want to load!");
 		label.setHorizontalAlignment(JLabel.CENTER);
 		
-		JComboBox<String> box = new JComboBox<String>();
-		
+		JComboBox<Integer> box = new JComboBox<Integer>();
+		for(int i = 0; i < player.getSavedGames(); i++){
+		box.addItem(i+1);
+		}
 		JPanel panel = new JPanel(new GridLayout(2,1));
 		panel.add(label);
 		panel.add(box);
 		content.add(panel, BorderLayout.CENTER);
 		
 		JButton button = new JButton("Load Cryptogram");
+		button.setToolTipText("Chooses which cryptogram to load.");
 		button.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(arg0.getActionCommand() == "Load Cryptogram"){
-					JOptionPane.showMessageDialog(null, "Loading Cryptogram");
+					try {
+						if(box.getSelectedIndex() == -1){
+							JOptionPane.showMessageDialog(null, "Please select a game to load!");
+						}else{
+							System.out.println(Integer.decode(box.getSelectedItem().toString()));
+							game.loadGame(player, Integer.decode(box.getSelectedItem().toString())); // Gets number from JComboBox, somehow
+							JOptionPane.showMessageDialog(null, "Loading Cryptogram");
+						}
+					} catch (NumberFormatException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					frame.dispose();
-					//Call the frame in which the game itself is going to be
+					
 				}
 				
 			}
 			
 		});
+		JPanel panel1 = new JPanel(new GridLayout(1,1));
+		panel1.add(button);
+		content.add(panel1, BorderLayout.SOUTH);
 		
 		frame.pack();
 		frame.setLocationRelativeTo(null);
@@ -595,13 +704,29 @@ public class CryptogramGUI {
 	}
 	
 	private void cryptogramFrame(){
-		JFrame frame = new JFrame("CryptogramCS207");
-		frame.setBackground(Color.WHITE);
-		Container content = frame.getContentPane();
+		cryptogramGameFrame = new JFrame("CryptogramCS207");
+		cryptogramGameFrame.setBackground(Color.WHITE);
+		Container content = cryptogramGameFrame.getContentPane();
 		content.setBackground(Color.WHITE);
 		JButton button = new JButton("New Game");
+		button.setToolTipText("Button allows you to create a new game at any time.");
 		JButton button1 = new JButton("View Frequencies");
+		button1.setToolTipText("Button allows you to view frequencies and hide them.");
 		JButton button2 = new JButton("Get a Hint");
+		button2.setToolTipText("Button gives you a hint");
+		JButton button3 = new JButton("Load Game");
+		button3.setToolTipText("Button allows you to load a game at any time.");
+		button3.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "Load Game"){
+					//Maybe do stuff alter
+				}
+				
+			}
+			
+		});
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
@@ -609,16 +734,39 @@ public class CryptogramGUI {
 		panel.add(button);
 		panel.add(button1);
 		panel.add(button2);
+		panel.add(button3);
 		
-		JButton button3 = new JButton("Check Cryptogram");
-		JButton button4 = new JButton("Reset Cryptogram");
-		JButton button5 = new JButton("Exit Game");
-		button5.addActionListener(new ActionListener(){
+		JButton button4 = new JButton("Check Cryptogram");
+		button4.setToolTipText("Button Allows you to check the current cryptogram at any time");
+		JButton button5 = new JButton("Reset Cryptogram");
+		button5.setToolTipText("Button allows you to reset the cryptogram at any time");
+		JButton button6 = new JButton("Save Game");
+		button6.setToolTipText("Button allows you to save game at anhy time");
+		button6.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getActionCommand() == "Save Game"){
+					try {
+						game.saveGame(player, cryptogram);
+						JOptionPane.showMessageDialog(null, "Game Saved!");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}
+			
+		});
+		JButton button7 = new JButton("Exit Game");
+		button7.setToolTipText("Button allows you to exit the game at any time.");
+		button7.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(arg0.getActionCommand() == "Exit Game"){
-					exitingFrame();
+					saveFrame();
 				}
 				
 			}
@@ -628,11 +776,11 @@ public class CryptogramGUI {
 		JPanel panel1 = new JPanel();
 		panel1.setBackground(Color.WHITE);
 		panel1.setLayout(new FlowLayout(2));
-		panel1.add(button3);
 		panel1.add(button4);
 		panel1.add(button5);
+		panel1.add(button6);
+		panel1.add(button7);
 		
-		//ArrayList<JTextField> fields = new ArrayList<JTextField>();
 		JPanel phrase = new JPanel();
 		phrase.setBackground(Color.WHITE);
 		
@@ -694,8 +842,160 @@ public class CryptogramGUI {
 		content.add(panel1, BorderLayout.SOUTH);
 		content.add(phrase, BorderLayout.CENTER);
 		
+		cryptogramGameFrame.pack();
+		cryptogramGameFrame.setSize(800, 600);
+		cryptogramGameFrame.setLocationRelativeTo(null);
+		cryptogramGameFrame.setVisible(true);
+	}
+	
+	private void chooseExitWay(){
+		JFrame frame = new JFrame("Exit?");
+		Container content = frame.getContentPane();
+		JLabel label = new JLabel("Are you sure you want to quit?");
+		JLabel label1 = new JLabel(" ");
+		
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		panel.add(label);
+		panel.add(label1);
+		content.add(panel, BorderLayout.CENTER);
+		
+		JButton button = new JButton("Yes");
+		button.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getActionCommand() == "Yes"){
+					frame.dispose();
+					whereToExitTo();
+				}
+				
+			}
+			
+		});
+		JButton button1 = new JButton("No");
+		button1.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "No"){
+					frame.dispose();
+				}
+				
+			}
+			
+		});
+		
+		JPanel panel1 = new JPanel(new GridLayout(1,1));
+		panel1.add(button);
+		panel1.add(button1);
+		content.add(panel1, BorderLayout.SOUTH);
+		
 		frame.pack();
-		frame.setSize(800, 600);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		
+	}
+	
+	private void whereToExitTo(){
+		JFrame frame = new JFrame("Where to?");
+		Container content = frame.getContentPane();
+		JLabel label = new JLabel("Please select your exit destination");
+		JLabel label1 = new JLabel(" ");
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		panel.add(label);
+		panel.add(label1);
+		content.add(panel, BorderLayout.CENTER);
+		
+		JButton button = new JButton("To desktop");
+		button.setToolTipText("Allows you to exit to desktop");
+		button.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getActionCommand() == "To desktop"){
+					System.exit(0);
+				}
+				
+			}
+			
+		});
+		JButton button1 = new JButton("To main menu");
+		button1.setToolTipText("Allows you to exit to main menu");
+		button1.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "To main menu"){
+					frame.dispose();
+					cryptogramGameFrame.dispose();
+					gameFrame();
+				}
+				
+			}
+			
+		});
+		
+		JPanel panel1 = new JPanel(new GridLayout(1,1));
+		panel1.add(button);
+		panel1.add(button1);
+		content.add(panel1, BorderLayout.SOUTH);
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+	
+	private void saveFrame(){
+		JFrame frame = new JFrame("Save Game?");
+		Container content = frame.getContentPane();
+		
+		JLabel label = new JLabel("Would you like to save your progress?");
+		JLabel label1 = new JLabel("Any unsaved progress wouyld be lost!");
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		panel.add(label);
+		panel.add(label1);
+		content.add(panel, BorderLayout.CENTER);
+		
+		JButton button = new JButton("Yes");
+		button.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "Yes"){
+					frame.dispose();
+					chooseExitWay();
+					//Save file functionality
+					try {
+						game.saveGame(player, cryptogram);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+			}
+			
+		});
+		JButton button1 = new JButton("No");
+		button1.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand() == "No"){
+					frame.dispose();
+					chooseExitWay();
+				}
+				
+			}
+			
+		});
+		
+		JPanel panel1 = new JPanel(new GridLayout(1,1));
+		panel1.add(button);
+		panel1.add(button1);
+		content.add(panel1, BorderLayout.SOUTH);
+		
+		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
