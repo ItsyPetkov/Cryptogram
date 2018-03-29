@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import gui.java.CryptogramGUI;
@@ -19,7 +18,7 @@ public class Game {
 
 	public Game() {
 		playerGameMapping = new Players();
-		playGame();
+//		playGame();
 	}
 
 	public void playGame() {
@@ -43,7 +42,7 @@ public class Game {
 			// Writes the cryptogram
 			writer.write(cryptogram.getPhrase());
 			writer.write(System.getProperty("line.separator"));
-//	Needs work		writer.write(cryptogram.getEncryptedPhrase()); 
+//			writer.write(cryptogram.getEncryptedPhrase()); 
 		} catch (IOException e) {
 			System.err.println(e);
 		}
@@ -52,11 +51,10 @@ public class Game {
 		writer.close();
 	}
 
-	public void loadGame(Player pl) throws Exception {
-		CryptogramFactory cf;
+	
+	public void loadGame(Player pl, int i) throws Exception {
 		Player player = pl;
 		String encrypted_phrase = null;
-		for (int i = 0; i < 10; i++) {
 			try {
 				int j = 0;
 				Scanner scanner = null;
@@ -74,14 +72,12 @@ public class Game {
 			} catch (FileNotFoundException e) {
 				System.out.println("File Not Found!");// alter if needed
 			} catch (IOException e) {
-				System.out.println("Something went wrong while reading from file!");// alter if needed
-			}	
+				System.out.println("Something went wrong while reading from file!");// alter if needed	
 		}
-		cf = new CryptogramFactory();
-		cf.makeCryptogram(encrypted_phrase);
 	}
 
-	public Player loadPlayer(Player player) throws IOException {
+
+	public Player loadPlayer(Player player) {
 
 		for (int i = 0; i < playerGameMapping.allPlayers.size() - 1; i++) {
 			if (playerGameMapping.allPlayers.get(i).getName() == player.getName()) {
@@ -92,4 +88,32 @@ public class Game {
 		return currentPlayer;
 	}
 
+	public Player addSavedPlayerToArrayList(String gui_input){
+		String[] player_info = new String[6];
+		try {
+			int j = 0;
+			Scanner scanner = null;
+			FileReader fr = new FileReader(gui_input + "_file.txt");
+			BufferedReader br = new BufferedReader(fr);
+			String input = br.readLine();
+			while (input != null) {
+				scanner = new Scanner(input);
+				String phrase = scanner.next();
+				player_info[j] = phrase;
+				input = br.readLine();
+				j++;
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("File Not Found!");// alter if needed
+		} catch (IOException e) {
+			System.out.println("Something went wrong while reading from file!");// alter if needed
+		}	
+		int temp_accuracy = Integer.decode(player_info[1]); // accuracy
+		int temp_averageTime = Integer.decode(player_info[2]);
+		int temp_cryptogramsPlayed = Integer.decode(player_info[3]);
+		int temp_cryptogramsCompleted = Integer.decode(player_info[4]);
+		int temp_gamesSaved = Integer.decode(player_info[5]);
+		return new Player(player_info[0], temp_accuracy, temp_averageTime, temp_cryptogramsPlayed, temp_cryptogramsCompleted, temp_gamesSaved);
+	}
 }
