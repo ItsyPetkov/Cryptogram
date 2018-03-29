@@ -1,8 +1,12 @@
 package main.java;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Player {
 	private String name;
@@ -12,25 +16,29 @@ public class Player {
 	private int cryptogramsCompleted;
 	private int savedGames;
 	
-	public Player(String name) throws IOException {
+	public Player(String name){
 		this.name = name;
 		accuracy = 0;
 		averageTime = 0;
 		cryptogramsPlayed = 0;
 		cryptogramsCompleted = 0;
 		savedGames = 0;
-		savePlayerFile();
+		try{
+			savePlayerFile();
+		}catch(IOException e){
+			System.err.println(e);
+		}
+		
 	}
 	
 	//Constructor meant for loading the player back into the game on the 2nd launch of the application.
-	public Player(String name, int accuracy, int averageTime, int cryptogramsPlayed, int cryptogramsCompleted) {
+	public Player(String name, int accuracy, int averageTime, int cryptogramsPlayed, int cryptogramsCompleted, int gamesSaved) {
 		this.name = name;
 		this.accuracy = accuracy;
 		this.averageTime = averageTime;
 		this.cryptogramsPlayed = cryptogramsPlayed;
 		this.cryptogramsCompleted = cryptogramsCompleted;
-	//	this.savedGames = 0;
-	//	this.savePlayerFile();
+		this.savedGames = gamesSaved;
 	}
 	
 	public void updateAccuracy(int accuracy) {
@@ -87,31 +95,32 @@ public class Player {
 	
 	public void savePlayerFile() throws IOException
 	{
-		File file = new File(this.getName() +"_file.txt");
-		file.createNewFile();
-		FileWriter writer = new FileWriter(file);
+			File file = new File(this.getName() +"_file.txt");
+			file.createNewFile();
+			FileWriter writer = new FileWriter(file);
 
-		try
-		{
-		//Writes the player
-		writer.write(this.getName());
-		writer.write(System.getProperty("line.separator"));
-		writer.write(this.getAccuracy());
-		writer.write(System.getProperty("line.separator"));
-		writer.write(this.getAverageTime());
-		writer.write(System.getProperty("line.separator"));
-		writer.write(this.getNumCryptogramsPlayed());
-		writer.write(System.getProperty("line.separator"));
-		writer.write(this.getNumCryptogramsCompleted());
-		writer.write(System.getProperty("line.separator"));
-		writer.write(this.getSavedGames());
-		}
-		catch(IOException e)
-		{
-			e.getMessage();
-		}
-		
-		writer.flush();
-	    writer.close();
+			try
+			{
+			//Writes the player
+			writer.write(this.getName());
+			writer.write(System.getProperty("line.separator"));
+			writer.write(String.valueOf(this.getAccuracy()));
+			writer.write(System.getProperty("line.separator"));
+			writer.write(String.valueOf(this.getAverageTime()));
+			writer.write(System.getProperty("line.separator"));
+			writer.write(String.valueOf(this.getNumCryptogramsPlayed()));
+			writer.write(System.getProperty("line.separator"));
+			writer.write(String.valueOf(this.getNumCryptogramsCompleted()));
+			writer.write(System.getProperty("line.separator"));
+			writer.write(String.valueOf(this.getSavedGames()));
+			}
+			catch(IOException e)
+			{
+				e.getMessage();
+			}
+			
+			
+			writer.flush();
+		    writer.close();
 	}
 }
