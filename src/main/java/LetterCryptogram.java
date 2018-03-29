@@ -39,7 +39,6 @@ public class LetterCryptogram extends Cryptogram {
 	@Override
 	public void addMappingEntry(int key, char value) {
 		letter_mapping.put((char) key, value);
-		System.out.println(key + " " + value);
 	}
 	
 	/**

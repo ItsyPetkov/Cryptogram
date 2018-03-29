@@ -17,6 +17,11 @@ import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Stack;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -67,7 +72,7 @@ public class CryptogramGUI {
 		content.add(panel, BorderLayout.NORTH);
 
 		label2 = new JLabel(
-				"Copyright  Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
+				"Created by Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018).");
 		label2.setVerticalAlignment(JLabel.BOTTOM);
 		label2.setFont(new java.awt.Font("Arail", Font.PLAIN, 10));
 
@@ -126,7 +131,7 @@ public class CryptogramGUI {
 		JLabel label = new JLabel("Authentication required in order to play!");
 		label.setFont(new java.awt.Font("Arail", Font.PLAIN, 18));
 		label.setHorizontalAlignment(JLabel.CENTER);
-		JLabel label1 = new JLabel("Hmm! If haven't seen you around here, you must be new!");
+		JLabel label1 = new JLabel("Hmm! I haven't seen you around here, you must be new!");
 		label1.setFont(new java.awt.Font("Arial", Font.PLAIN, 18));
 		label1.setHorizontalAlignment(JLabel.CENTER);
 		JLabel label2 = new JLabel("In order to continue further into the game you must either");
@@ -144,7 +149,7 @@ public class CryptogramGUI {
 		content.add(panel1, BorderLayout.CENTER);
 
 		JLabel label4 = new JLabel(
-				"Copyright  Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
+				"Created by Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018).");
 		label4.setVerticalAlignment(JLabel.NORTH);
 		label4.setFont(new java.awt.Font("Arail", Font.PLAIN, 10));
 		content.add(label4, BorderLayout.NORTH);
@@ -234,10 +239,10 @@ public class CryptogramGUI {
 						}else{
 							frame.dispose();
 							player = game.addSavedPlayerToArrayList(field.getText().toString());
-							players.addPlayer(player);	
-							logIn();
+							players.addPlayer(player);
+							gameFrame();
 						}
-					}catch(NullPointerException e){
+					} catch(NullPointerException e){
 						JOptionPane.showMessageDialog(null, "No such name!");
 					}
 					
@@ -340,58 +345,6 @@ public class CryptogramGUI {
 		frame.setVisible(true);
 	}
 
-	public void logIn() {
-
-		JFrame frame = new JFrame("Log In");
-		Container content = frame.getContentPane();
-
-		JLabel label = new JLabel("User log in!");
-		label.setHorizontalAlignment(JLabel.CENTER);
-		JPanel panel = new JPanel(new GridLayout(1, 1));
-		panel.add(label);
-		content.add(panel, BorderLayout.NORTH);
-
-		JLabel label1 = new JLabel("Please select one of the following...");
-		JComboBox<String> box = new JComboBox<String>();
-		box.setToolTipText("Select which game you would like to load.");
-		DefaultComboBoxModel<String> boxModel = new DefaultComboBoxModel<String>();
-		for(int i = 0; i < players.allPlayers.size(); i++){
-			boxModel.addElement(players.allPlayers.get(i).getName().toString());
-		}
-		box.setModel(boxModel);
-		JPanel panel1 = new JPanel(new GridLayout(2, 1));
-		panel1.add(label1);
-		panel1.add(box);
-		content.add(panel1, BorderLayout.CENTER);
-
-		JButton button = new JButton("Load Player");
-		button.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (arg0.getActionCommand() == "Load Player") {
-					if(box.getSelectedIndex() == -1){
-						JOptionPane.showMessageDialog(null, "Please select a username with which to log in!");
-					}else{
-						JOptionPane.showMessageDialog(null, "Log in successful!");
-						frame.dispose();
-						authenticationFrame.dispose();
-						gameFrame();
-					}
-				}
-			}
-
-		});
-		
-		JPanel panel2 = new JPanel(new GridLayout(1,1));
-		panel2.add(button);
-		content.add(panel2, BorderLayout.SOUTH);
-		
-		frame.pack();
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-	}
-
 	public void gameFrame() {
 		JFrame frame = new JFrame("Cryptogram Game!");
 		Container content = frame.getContentPane();
@@ -461,7 +414,7 @@ public class CryptogramGUI {
 		content.add(panel1, BorderLayout.CENTER);
 
 		JLabel label1 = new JLabel(
-				"Copyright В© Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018). All rights reserved");
+				"Created by Hristo Petkov, Slav Ivanov and Kostadin Georgiev (CS207 2017/2018).");
 		label1.setVerticalAlignment(JLabel.BOTTOM);
 
 		JPanel panel2 = new JPanel(new GridLayout(1, 1));
@@ -708,12 +661,177 @@ public class CryptogramGUI {
 		cryptogramGameFrame.setBackground(Color.WHITE);
 		Container content = cryptogramGameFrame.getContentPane();
 		content.setBackground(Color.WHITE);
-		JButton button = new JButton("New Game");
-		button.setToolTipText("Button allows you to create a new game at any time.");
-		JButton button1 = new JButton("View Frequencies");
-		button1.setToolTipText("Button allows you to view frequencies and hide them.");
-		JButton button2 = new JButton("Get a Hint");
-		button2.setToolTipText("Button gives you a hint");
+		
+		JPanel phrase = new JPanel();
+		phrase.setBackground(Color.WHITE);
+		
+		ArrayList<Integer> encryptedPhrase = cryptogram.getEncryptedPhrase();
+		String realPhrase = cryptogram.getPhrase();
+		List<TextFieldLabelAssociation> textFieldAssociations = new ArrayList<TextFieldLabelAssociation>();
+		Map<Integer, Integer> frequencies = cryptogram.getFrequencies();
+		List<JLabel> frequencyLabels = new ArrayList<JLabel>();
+		List<JTextField> textFields = new ArrayList<JTextField>();
+		Stack<String> undoLastLetter = new Stack<String>();
+		
+		int i = 0;
+		while (i < encryptedPhrase.size()) {
+			JPanel word = new JPanel();
+			JPanel separator = new JPanel();
+			separator.setBackground(Color.WHITE);
+			word.setBackground(new Color(234, 234, 234));
+			
+			if (Character.isLetter(realPhrase.charAt(i)) || Character.isDigit(realPhrase.charAt(i))) {
+				while (Character.isLetter(realPhrase.charAt(i)) || Character.isDigit(realPhrase.charAt(i))) {
+					JPanel letter = new JPanel();
+					letter.setBackground(new Color(234, 234, 234));
+					letter.setLayout(new GridLayout(3, 1));
+					
+					// Add an empty text field.
+					JTextField field = new JTextField();
+					field.setDocument(new JTextFieldCharLimit(1));
+					field.setPreferredSize(new Dimension(20,30));
+					field.setHorizontalAlignment(JTextField.CENTER);
+					
+					// Add the encrypted symbol below the text field.
+					JLabel encryptedSymbol = new JLabel();
+					encryptedSymbol.setHorizontalAlignment(JLabel.CENTER);
+					encryptedSymbol.setFont(new java.awt.Font("Arial", Font.BOLD, 12));
+					if (cryptogram instanceof LetterCryptogram) {
+						encryptedSymbol.setText(String.valueOf((char) ((int) encryptedPhrase.get(i))).toUpperCase());
+					} else {
+						encryptedSymbol.setText(String.valueOf(encryptedPhrase.get(i)));
+					}
+					
+					// Add frequency.
+					JLabel frequency = new JLabel();
+					if (cryptogram instanceof LetterCryptogram) {
+						System.out.println(frequencies.get((int) encryptedPhrase.get(i)));
+						frequency.setText(Integer.toString(frequencies.get(encryptedPhrase.get(i))));
+					} else {
+						frequency.setText(String.valueOf(frequencies.get(encryptedPhrase.get(i))));
+					}
+					frequency.setHorizontalAlignment(JLabel.CENTER);
+					frequency.setVisible(false);
+					frequencyLabels.add(frequency);
+					
+					// Add association between the encrypted symbol and the text field.
+					textFieldAssociations.add(new TextFieldLabelAssociation(encryptedSymbol.getText(), field));
+					textFields.add(field);
+					
+					letter.add(field);
+					letter.add(encryptedSymbol);
+					letter.add(frequency);
+					word.add(letter);
+					i++;
+				}
+				phrase.add(word);
+			} else {
+				JPanel symbol = new JPanel();
+				symbol.setBackground(Color.WHITE);
+				symbol.add(new JLabel(String.valueOf(realPhrase.charAt(i))));
+				symbol.setLayout(new GridLayout(3, 1));
+				separator.add(symbol);
+				
+				phrase.add(separator);
+				i++;
+			}
+		}
+		
+		for (TextFieldLabelAssociation item : textFieldAssociations) {
+			item.getField().addKeyListener(new KeyListener() {
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					for (TextFieldLabelAssociation item2 : textFieldAssociations) {
+						if (item.getSymbol().equals(item2.getSymbol())) {
+							item2.getField().setText(item.getField().getText());
+						}
+					}
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+					if (!(Character.isLetter(e.getKeyChar()))) {
+						e.consume();
+					} else {
+						System.out.println(String.valueOf(e.getKeyChar()));
+						undoLastLetter.push(String.valueOf(e.getKeyChar()));
+						System.out.println(Arrays.toString(undoLastLetter.toArray()));
+					}
+				}
+				
+			});
+		}
+		
+		JButton undoButton = new JButton("Undo");
+		undoButton.addActionListener( new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if (!undoLastLetter.isEmpty()) {
+					String lastLetter = undoLastLetter.pop();
+					
+					for (JTextField tf : textFields) {
+						if (tf.getText().equals(lastLetter.toUpperCase())) {
+							tf.setText("");
+						}
+					}
+				}
+			}
+			
+		});
+		undoButton.setToolTipText("Button allows you to create a new game at any time.");
+		JButton frequencyButton = new JButton("View Frequencies");
+		frequencyButton.addActionListener( new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (JLabel frequency : frequencyLabels) {
+					if (frequency.isVisible()) {
+						frequency.setVisible(false);
+						frequencyButton.setText("Show frequencies");
+					} else {
+						frequency.setVisible(true);
+						frequencyButton.setText("Hide frequencies");
+					}
+					
+				}
+			}
+			
+		});
+		frequencyButton.setToolTipText("Button allows you to view frequencies and hide them.");
+		JButton getHintButton = new JButton("Get a Hint");
+		getHintButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ArrayList<TextFieldLabelAssociation> emptyFields = new ArrayList<TextFieldLabelAssociation>();
+				
+				for (TextFieldLabelAssociation item : textFieldAssociations) {
+					if (item.getField().getText().equals("")) {
+						emptyFields.add(item);
+					}
+				}
+				
+				Random rnd = new Random();
+				TextFieldLabelAssociation rndField = emptyFields.get(rnd.nextInt(emptyFields.size() - 1));
+				String realLetter = String.valueOf(cryptogram.getLetter(rndField.getSymbol().charAt(0)));
+				rndField.getField().setText(realLetter);
+				
+				for (TextFieldLabelAssociation item2 : textFieldAssociations) {
+					if (rndField.getSymbol().equals(item2.getSymbol())) {
+						item2.getField().setText(realLetter);
+					}
+				}
+			}
+			
+		});
+		getHintButton.setToolTipText("Button gives you a hint");
 		JButton button3 = new JButton("Load Game");
 		button3.setToolTipText("Button allows you to load a game at any time.");
 		button3.addActionListener(new ActionListener(){
@@ -731,18 +849,28 @@ public class CryptogramGUI {
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setLayout(new FlowLayout(-2));
-		panel.add(button);
-		panel.add(button1);
-		panel.add(button2);
+		panel.add(undoButton);
+		panel.add(frequencyButton);
+		panel.add(getHintButton);
 		panel.add(button3);
 		
-		JButton button4 = new JButton("Check Cryptogram");
-		button4.setToolTipText("Button Allows you to check the current cryptogram at any time");
-		JButton button5 = new JButton("Reset Cryptogram");
-		button5.setToolTipText("Button allows you to reset the cryptogram at any time");
-		JButton button6 = new JButton("Save Game");
-		button6.setToolTipText("Button allows you to save game at anhy time");
-		button6.addActionListener(new ActionListener(){
+		JButton checkButton = new JButton("Check Cryptogram");
+		checkButton.setToolTipText("Button Allows you to check the current cryptogram at any time");
+		JButton resetButton = new JButton("Reset Cryptogram");
+		resetButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (JTextField tf : textFields) {
+					tf.setText("");
+				}
+			}
+			
+		});
+		resetButton.setToolTipText("Button allows you to reset the cryptogram at any time");
+		JButton saveButton = new JButton("Save Game");
+		saveButton.setToolTipText("Button allows you to save game at anhy time");
+		saveButton.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -759,9 +887,9 @@ public class CryptogramGUI {
 			}
 			
 		});
-		JButton button7 = new JButton("Exit Game");
-		button7.setToolTipText("Button allows you to exit the game at any time.");
-		button7.addActionListener(new ActionListener(){
+		JButton exitButton = new JButton("Exit Game");
+		exitButton.setToolTipText("Button allows you to exit the game at any time.");
+		exitButton.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -776,67 +904,10 @@ public class CryptogramGUI {
 		JPanel panel1 = new JPanel();
 		panel1.setBackground(Color.WHITE);
 		panel1.setLayout(new FlowLayout(2));
-		panel1.add(button4);
-		panel1.add(button5);
-		panel1.add(button6);
-		panel1.add(button7);
-		
-		JPanel phrase = new JPanel();
-		phrase.setBackground(Color.WHITE);
-		
-		ArrayList<Integer> encryptedPhrase = cryptogram.getEncryptedPhrase();
-		String realPhrase = cryptogram.getPhrase();
-		
-		int i = 0;
-		while (i < encryptedPhrase.size()) {
-			JPanel word = new JPanel();
-			JPanel separator = new JPanel();
-			separator.setBackground(Color.WHITE);
-			word.setBackground(new Color(234, 234, 234));
-			
-			
-			if (Character.isLetter(realPhrase.charAt(i)) || Character.isDigit(realPhrase.charAt(i))) {
-				while (Character.isLetter(realPhrase.charAt(i)) || Character.isDigit(realPhrase.charAt(i))) {
-					JPanel letter = new JPanel();
-					letter.setBackground(new Color(234, 234, 234));
-					JTextField field = new JTextField();
-					field.addKeyListener(new java.awt.event.KeyAdapter() {
-						public void keyTyped(java.awt.event.KeyEvent evt) {
-							if (!(Character.isLetter(evt.getKeyChar()))) {
-								evt.consume();
-							}
-						}
-					});
-					field.setDocument(new JTextFieldCharLimit(1));
-					field.setPreferredSize(new Dimension(20,30));
-					field.setHorizontalAlignment(JTextField.CENTER);
-					letter.add(field);
-					JLabel encryptedSymbol = new JLabel();
-					encryptedSymbol.setHorizontalAlignment(JLabel.CENTER);
-					if (cryptogram instanceof LetterCryptogram) {
-						encryptedSymbol.setText(String.valueOf((char) ((int) encryptedPhrase.get(i))).toUpperCase());
-					} else {
-						encryptedSymbol.setText(String.valueOf(encryptedPhrase.get(i)));
-					}
-					letter.add(encryptedSymbol);
-					letter.setLayout(new GridLayout(3, 1));
-					word.add(letter);
-					i++;
-				}
-				phrase.add(word);
-			} else {
-				JPanel symbol = new JPanel();
-				symbol.setBackground(Color.WHITE);
-				symbol.add(new JLabel(String.valueOf(realPhrase.charAt(i))));
-				symbol.setLayout(new GridLayout(3, 1));
-				separator.add(symbol);
-				
-				phrase.add(separator);
-				i++;
-			}
-		}
-		
-		
+		panel1.add(checkButton);
+		panel1.add(resetButton);
+		panel1.add(saveButton);
+		panel1.add(exitButton);
 		
 		content.add(panel, BorderLayout.NORTH);
 		content.add(panel1, BorderLayout.SOUTH);
